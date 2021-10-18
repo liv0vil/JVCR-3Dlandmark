@@ -24,8 +24,7 @@ Train Dataset으로는 `300W-LP` 를 사용합니다.
 - AFLW3000-3D : The fitted 3D faces of the first 2000 AFLW samples, which can be used for 3D face alignment evaluation.
 
 ## 추천 논문 리스트
-- [Face Alignment Across Large Poses: A 3D Solution](https://openaccess.thecvf.com/content_cvpr_2016/papers/Zhu_Face_Alignment_Across_CVPR_2016_paper.pdf)
-- 
+- [Face Alignment Across Large Poses: A 3D Solution](https://openaccess.thecvf.com/content_cvpr_2016/papers/Zhu_Face_Alignment_Across_CVPR_2016_paper.pdf) 
 
 ## Implement
 `Joint Voxel and Coordinate Regression for Accurate 3D Facial Landmark Localization`   
