@@ -39,18 +39,10 @@ cd JVCR-3Dlandmark
 ```
 Then, you can run the demo code or train a model from stratch.
 
-### Demo
-1. Download the [pre-trained model](https://drive.google.com/drive/folders/1wT3efHjqUfTMHj8qAjkPn8m9qS614Lxu) (trained on [300W-LP](http://www.cbsr.ia.ac.cn/users/xiangyuzhu/projects/3DDFA/main.htm)) and put it into the `checkpoint` directory
-
-2. Run the demo code
-
-```
-python run_demo.py --verbose
-```
 
 ### Training
 
-1. Prepare the training and evaluation datasets
+1. train과 evaluate 을 위한 데이터셋을 다운받기 (링크 및 소프트링크 추가)
 - Download [300W-LP](http://www.cbsr.ia.ac.cn/users/xiangyuzhu/projects/3DDFA/main.htm) and [AFLW3000-3D](http://www.cbsr.ia.ac.cn/users/xiangyuzhu/projects/3DDFA/main.htm)
 - Create soft links to the dataset directories
 ```
