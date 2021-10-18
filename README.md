@@ -1,10 +1,23 @@
-# Joint Voxel and Coordinate Regression for Accurate 3D Facial Landmark Localization
+# [2021 Computer-Vision] Term-Project
+
+This repository was forked from [JVCR](https://github.com/HongwenZhang/JVCR-3Dlandmark) for the purpose of the term project of class Computer Vision in Sejong Univ.
 
 This repository includes the PyTorch code for training and evaluating the network described in [Joint Voxel and Coordinate Regression for Accurate 3D Facial Landmark Localization](https://arxiv.org/abs/1801.09242).
+
+## Challenge Overview
+
+본 챌린지는 얼굴의 상징점(눈, 코, 입 등)의 위치 즉, Facial Landmark 를 찾는 Task 입니다.   
+해당 연구를 Facial Landmark Detection 혹은 Facial Landmark Localization 이라고도 합니다.
+
+이번 챌린지에서는 [Joint Voxel and Coordinate Regression](https://arxiv.org/pdf/1801.09242.pdf) (이하 JVCR) 베이스라인으로 3D Landmark Detection 을 찾아내는 것을 목표로 합니다.
 
 <p align='center'>
 <img src='imgs/aflwDemo.gif' title='examples for 3D facial landmark localization' style='max-width:600px'></img>
 </p>
+
+## Joint Voxel and Coordinate Regression for Accurate 3D Facial Landmark Localization
+
+아래 implement 을 따라 실행해주시기 바랍니다.
 
 ## Requirements
 
@@ -12,10 +25,10 @@ This repository includes the PyTorch code for training and evaluating the networ
 
 ### packages
 
-- [PyTorch](https://www.pytorch.org)
-- [NumPy](http://www.numpy.org)
-- [Matplotlib](https://matplotlib.org)
-- [progress](https://anaconda.org/conda-forge/progress)
+- [PyTorch](https://www.pytorch.org) 1.2.0
+- [NumPy](http://www.numpy.org) 1.16.2
+- [Matplotlib](https://matplotlib.org) 2.2.2
+- [progress](https://anaconda.org/conda-forge/progress) 1.3
 
 ## Usage
 
