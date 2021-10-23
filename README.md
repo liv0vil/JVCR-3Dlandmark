@@ -18,10 +18,10 @@ This repository includes the PyTorch code for training and evaluating the networ
 ## Dataset
 
 Train Dataset으로는 `300W-LP` 를 사용합니다.
-원래 JVCR 코드에서는 Validation-Set 으로 `AFLW3000-3D`를 사용하였으나, 이번 챌린지에서는 Testset으로 사용합니다.
+원래 JVCR 코드에서는 Validation-Set 으로 `AFLW2000-3D`를 사용하였으나, 이번 챌린지에서는 Testset으로 사용합니다.
 
 - 300W-LP : The synthesized large-pose face images from 300W.
-- AFLW3000-3D : The fitted 3D faces of the first 2000 AFLW samples, which can be used for 3D face alignment evaluation.
+- AFLW2000-3D : The fitted 3D faces of the first 2000 AFLW samples, which can be used for 3D face alignment evaluation.
 
 ## 추천 논문 리스트
 - [Face Alignment Across Large Poses: A 3D Solution](https://openaccess.thecvf.com/content_cvpr_2016/papers/Zhu_Face_Alignment_Across_CVPR_2016_paper.pdf) 
@@ -54,7 +54,7 @@ Then, you can run the demo code or train a model from stratch.
 ### Training
 
 1. train과 evaluate 을 위한 데이터셋을 다운받기 (링크 및 소프트링크 추가)
-- Download [300W-LP](http://www.cbsr.ia.ac.cn/users/xiangyuzhu/projects/3DDFA/main.htm) and [AFLW3000-3D](http://www.cbsr.ia.ac.cn/users/xiangyuzhu/projects/3DDFA/main.htm)
+- Download [300W-LP](http://www.cbsr.ia.ac.cn/users/xiangyuzhu/projects/3DDFA/main.htm) and [AFLW2000-3D](http://www.cbsr.ia.ac.cn/users/xiangyuzhu/projects/3DDFA/main.htm)
 - Create soft links to the dataset directories
 ```
 ln -s /path/to/your/300W_LP data/300wLP/images
