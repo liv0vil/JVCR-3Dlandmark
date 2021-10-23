@@ -20,9 +20,10 @@ This repository includes the PyTorch code for training and evaluating the networ
 Train Dataset으로는 `300W-LP` 를 사용합니다.
 원래 JVCR 코드에서는 Validation-Set 으로 `AFLW2000-3D`를 사용하였으나, 이번 챌린지에서는 Testset으로 사용합니다.
 
-랜드마크 정보는 아래 이미지를 통해 확인 가능합니다.
+68개의 랜드마크 정보는 아래 이미지와 같이 인덱싱 되어 있습니다.   
+(3D보다는 2D Landmark를 더 이해하기 쉬울 것 같아 이미지는 2D Landmark를 첨부하였습니다.)
 
-![68 Landmarks Annotation](https://user-images.githubusercontent.com/59993108/138572460-711f918e-4300-4e27-bfd0-22f51d985df2.png)
+<img src="https://user-images.githubusercontent.com/59993108/138572460-711f918e-4300-4e27-bfd0-22f51d985df2.png" height="300"/>
 
 
 - [300W-LP](http://www.cbsr.ia.ac.cn/users/xiangyuzhu/projects/3DDFA/main.htm) : Facial Landmark Detection 에서 가장 대표적으로 사용되는 데이터셋인 [300W](https://ibug.doc.ic.ac.uk/resources/300-W/)을 Large Pose로 합성시킨 데이터셋입니다. 61,255개의 얼굴 이미지가 존재하며, 3D 변형 모델 기반 프로파일링 방법을 사용하여 기존 300W에서의 얼굴 이미지를 −90◦~90◦ 를 가지는 Large-Pose로 가공하여 만들었고 68개의 3D 랜드마크를 가지게됩니다. 
