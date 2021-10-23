@@ -25,6 +25,8 @@ Train Dataset으로는 `300W-LP` 를 사용합니다.
 
 ## 추천 논문 리스트
 - [Face Alignment Across Large Poses: A 3D Solution](https://openaccess.thecvf.com/content_cvpr_2016/papers/Zhu_Face_Alignment_Across_CVPR_2016_paper.pdf) 
+- [How far are we from solving the 2D & 3D Face Alignment problem?(and a dataset of 230,000 3D facial landmarks)](https://openaccess.thecvf.com/content_ICCV_2017/papers/Bulat_How_Far_Are_ICCV_2017_paper.pdf)
+- [Attention-Driven Cropping for Very High Resolution Facial Landmark Detection](https://openaccess.thecvf.com/content_CVPR_2020/papers/Chandran_Attention-Driven_Cropping_for_Very_High_Resolution_Facial_Landmark_Detection_CVPR_2020_paper.pdf)
 
 ## Implement
 `Joint Voxel and Coordinate Regression for Accurate 3D Facial Landmark Localization`   
@@ -65,6 +67,11 @@ ln -s /path/to/your/aflw2000 data/aflw2000/images
 ```
 python train.py --gpus 0 -j 4
 ```
+
+## Pre-trained Model
+
+300W-LP로 학습한 [Pre-Trained Model](https://drive.google.com/drive/folders/1wT3efHjqUfTMHj8qAjkPn8m9qS614Lxu)을 다운받은 후 checkpoint 로 사용할 수도 있습니다.
+
 
 ## Acknowledgment
 
