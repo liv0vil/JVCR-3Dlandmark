@@ -2,6 +2,7 @@ from __future__ import print_function, absolute_import
 
 import os
 import sys
+import json
 import argparse
 from time import time
 import matplotlib
@@ -45,12 +46,6 @@ def main(args):
         batch_size=args.train_batch, shuffle=True,
         num_workers=args.workers, pin_memory=True)
 
-    val_loader = torch.utils.data.DataLoader(
-        fa68pt3D('data/aflw2000/aflw2000_3D_anno_vd.json', 'data/aflw2000/images', 'aflw2000', depth_res=args.depth_res,
-            nStack=args.stacks, sigma=args.sigma, train=False),
-        batch_size=args.test_batch, shuffle=False,
-        num_workers=args.workers, pin_memory=True)
-
     # 68 points plus eye and mouth center
     nParts = 71
     # create model
@@ -71,11 +66,11 @@ def main(args):
     criterion_vox = torch.nn.MSELoss(size_average=True).cuda()
     criterion_coord = torch.nn.MSELoss(size_average=True).cuda()
 
-    if args.evaluate:
-        print('\nEvaluation only')
-        mode = 'evaluate'
-        run(model, val_loader, mode, criterion_vox, criterion_coord, optimizer_G, optimizer_P)
-        return
+    # if args.evaluate:
+    #     print('\nEvaluation only')
+    #     mode = 'evaluate'
+    #     run(model, val_loader, mode, criterion_vox, criterion_coord, optimizer_G, optimizer_P)
+    #     return
 
     lr = args.lr
     for epoch in range(args.start_epoch, args.epochs):
@@ -89,12 +84,7 @@ def main(args):
         print(mode+'ing...')
         run(model, train_loader, mode, criterion_vox, criterion_coord, optimizer_G, optimizer_P)
 
-        # evaluation
-        mode = 'evaluate'
-        _, nme_results = run(model, val_loader, mode, criterion_vox, criterion_coord, optimizer_G,
-                                       optimizer_P)
-
-        model.save_to_checkpoint(nme_results, args.checkpoint, snapshot=args.num_snapshot)
+        model.save_to_checkpoint(torch.FloatTensor(0), args.checkpoint, snapshot=args.num_snapshot)
 
 
 def run(model, data_loader, mode, criterion_vox, criterion_coord, optimizer_G, optimizer_P):
@@ -116,13 +106,13 @@ def run(model, data_loader, mode, criterion_vox, criterion_coord, optimizer_G, o
     def data2variable(inputs, target, meta):
         if mode in ['pre_train', 'train']:
             input_var = torch.autograd.Variable(inputs.cuda())
-            target_var = [torch.autograd.Variable(target[i].cuda(async=True)) for i in range(len(target))]
-            coord_var = torch.autograd.Variable(meta['tpts_inp'].cuda(async=True))
+            target_var = [torch.autograd.Variable(target[i].cuda(non_blocking=True)) for i in range(len(target))]
+            coord_var = torch.autograd.Variable(meta['tpts_inp'].cuda(non_blocking=True))
         else:
-            input_var = torch.autograd.Variable(inputs.cuda(), volatile=True)
-            target_var = [torch.autograd.Variable(target[i].cuda(async=True), volatile=True) for i in
-                          range(len(target))]
-            coord_var = torch.autograd.Variable(meta['tpts_inp'].cuda(async=True), volatile=True)
+            with torch.no_grad():
+                input_var = inputs.cuda()
+                target_var = [target[i].cuda(non_blocking=True) for i in range(len(target))]
+                coord_var = meta['tpts_inp'].cuda(non_blocking=True)
 
         return input_var, target_var, coord_var
 
@@ -198,8 +188,8 @@ def run(model, data_loader, mode, criterion_vox, criterion_coord, optimizer_G, o
         data_num += len(input_var)
 
         # measure nme and record loss
-        losses_vox.update(loss_vox.data[0], inputs.size(0))
-        losses_coord.update(loss_coord.data[0], inputs.size(0))
+        losses_vox.update(loss_vox.data.item(), inputs.size(0))
+        losses_coord.update(loss_coord.data.item(), inputs.size(0))
         errs.update(np.mean(box_nme), inputs.size(0))
 
         log_info['losses_vox'] = losses_vox.avg
@@ -214,7 +204,7 @@ def run(model, data_loader, mode, criterion_vox, criterion_coord, optimizer_G, o
             bt=batch_time.val,
             total=bar.elapsed_td,
             eta=bar.eta_td,
-            loss='vox: {:.4f}; coord: {:.4f}'.format(loss_vox.data[0], loss_coord.data[0]),
+            loss='vox: {:.4f}; coord: {:.4f}'.format(loss_vox.item(), loss_coord.item()),
             nme=errs.avg
         )
         bar.next()

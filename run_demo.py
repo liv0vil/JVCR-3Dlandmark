@@ -2,6 +2,7 @@ from __future__ import print_function, absolute_import
 
 import os
 import sys
+import json
 import argparse
 from time import time
 import matplotlib
@@ -55,15 +56,20 @@ def main(args):
     model = pvcNet(args.stacks, args.blocks, args.depth_res, nParts,
                    resume_p2v2c=args.resume_p2v2c, is_cuda=is_cuda)
 
+    DATA_DIR = "data/aflw2000/images/"
     imgDir = args.imgDir
-    lmDir = args.lmDir
+    lmDir = None
     outDir = args.outDir
 
     model.resume_from_checkpoint()
 
     model.eval()
 
-    imgPathList = [imgDir+name for name in os.listdir(imgDir) if name.endswith('.jpg')]
+    with open(imgDir, "r") as j:
+        imgPathList = json.load(j)
+    with open(os.path.join(outDir, 'sample_submit.json'), "r") as j:
+        sample_file = json.load(j)
+
 
     # link for facial points
     skeletons = [[i, i + 1] for i in range(16)] + \
@@ -79,7 +85,7 @@ def main(args):
     nme = []
     for i, path in enumerate(imgPathList):
 
-        image = Image.open(path).convert('RGB')
+        image = Image.open(os.path.join(DATA_DIR, path)).convert('RGB')
         imgId = path.split('/')[-1][:-4]
 
         if lmDir is not None:
@@ -115,6 +121,8 @@ def main(args):
         if is_cuda:
             pred_coord = pred_coord.cpu()
 
+        lm_pred = transf_pred(pred_coord, center, scale)
+
         if args.verbose:
             utils.imutils.show_joints(input_tensor, pred_coord[:,0:2], show_idx=False, pairs=skeletons,
                                       ax=plt.subplot(221))
@@ -125,25 +133,34 @@ def main(args):
 
             show_joints3D(pred_coord.numpy(), pairs=skeletons, ax=plt.subplot(223, projection='3d'))
             plt.show()
-
-        if lmDir is not None:
-            lm_pred = transf_pred(pred_coord, center, scale)
-            err = utils.evaluation.p2pNormMeanError(lm_pred.unsqueeze(0), lm_gt.unsqueeze(0), [36, 45], z_zero_mean=True)[0]
-            nme.append(err)
+        
+        ## If you have ground truth, you can calculate the error
+        # if lmDir is not None:
+        #     lm_pred = transf_pred(pred_coord, center, scale)
+        #     err = utils.evaluation.p2pNormMeanError(lm_pred.unsqueeze(0), lm_gt.unsqueeze(0), [36, 45], z_zero_mean=True)[0]
+        #     nme.append(err)
 
         if outDir is not None:
             # write 3D coordinates to file
-            text_file = open(outDir + imgId + '.csv', "w")
+            text_file = []
             for idx in range(68):
-                text_file.write("{},{},{}\n".format(lm_pred[idx, 0], lm_pred[idx, 1], lm_pred[idx, 2]))
-            text_file.close()
+                text_file.append([lm_pred[idx, 0].item(), lm_pred[idx, 1].item(), lm_pred[idx, 2].item()])
+            
+            if sample_file[i]["img_paths"].split("/")[-1][:-4] == imgId:
+                sample_file[i]["landmarks"] = text_file
+            else :
+                raise Exception("ID dosen't Match")
 
         sys.stdout.write('\r')
         sys.stdout.write('{}/{} Done; Elapse {:.0f}ms'.format(i + 1, len(imgPathList), timeElapse*1000))
         sys.stdout.flush()
 
-    if len(nme) > 0:
-        print('\nGround Truth Error (GTE): {:.4f}'.format(np.mean(np.array(nme))))
+    with open(os.path.join(outDir, "output.json"), "w") as j:
+        json.dump(sample_file, j, indent=4)
+
+    # Get GTE Score, if you have ground truth
+    # if len(nme) > 0:
+    #     print('\nGround Truth Error (GTE): {:.4f}'.format(np.mean(np.array(nme))))
 
 
 if __name__ == '__main__':

@@ -91,8 +91,8 @@ def draw_labelvolume(vol, pt, sigma, type='Gaussian'):
     img = img = np.zeros((vol.shape[1:]))
 
     # Check that any part of the gaussian is in-bounds
-    ul = [int(pt[0] - 3 * sigma), int(pt[1] - 3 * sigma)]
-    br = [int(pt[0] + 3 * sigma + 1), int(pt[1] + 3 * sigma + 1)]
+    ul = [np.int(pt[0] - 3 * sigma), np.int(pt[1] - 3 * sigma)]
+    br = [np.int(pt[0] + 3 * sigma + 1), np.int(pt[1] + 3 * sigma + 1)]
     if (ul[0] >= img.shape[1] or ul[1] >= img.shape[0] or
             br[0] < 0 or br[1] < 0):
         # If not, just return the image as is

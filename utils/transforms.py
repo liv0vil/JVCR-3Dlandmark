@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import os
+import cv2
 import numpy as np
 import scipy.misc
 import matplotlib.pyplot as plt
@@ -8,6 +9,8 @@ import torch
 
 from .misc import *
 from .imutils import *
+
+import imutils
 
 
 def color_normalize(x, mean, std):
@@ -165,7 +168,7 @@ def transform3d(pt, center, scale, res, z_res, invert=0, rot=0):
 
     new_pt[2] = new_pt_z
 
-    return new_pt[:3]
+    return new_pt[:3].astype(int)
 
 
 
@@ -232,8 +235,8 @@ def crop(img, center, scale, res, rot=0):
 
     if not rot == 0:
         # Remove padding
-        new_img = scipy.misc.imrotate(new_img, rot)
+        new_img= imutils.rotate_bound(new_img,rot)
         new_img = new_img[pad:-pad, pad:-pad]
 
-    new_img = im_to_torch(scipy.misc.imresize(new_img, res))
+    new_img = im_to_torch(cv2.resize(new_img, dsize=(res[0],res[1]), interpolation=cv2.INTER_LINEAR))
     return new_img

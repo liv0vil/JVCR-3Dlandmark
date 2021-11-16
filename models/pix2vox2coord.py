@@ -60,11 +60,12 @@ class pvcNet(nn.Module):
 
 
     def landmarkDetection(self, image, target=None):
+        
+        with torch.no_grad():
+            input_var = image
+            vox_list, voxel, coord = self.forward(input_var)
 
-        input_var = torch.autograd.Variable(image, volatile=True)
-        vox_list, voxel, coord = self.forward(input_var)
-
-        pred_coord = 255*coord.squeeze(0)
+            pred_coord = 255*coord.squeeze(0)
 
         return vox_list, pred_coord
 
